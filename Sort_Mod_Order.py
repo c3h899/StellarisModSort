@@ -1,5 +1,7 @@
 import json
 import os
+import uuid
+from uuid import UUID
 
 mod_gui_order_json = 'game_data.json' # [GUI] List
 mod_order_json = 'dlc_load.json' # [Load] List
@@ -14,6 +16,7 @@ with open(mod_registry_json) as json_file:
     for record in mod_registry:
         key = mod_registry[record]['gameRegistryId']
         mod_id = mod_registry[record]['id'] # Same as record
+        mod_registry[record]['id'] = UUID(mod_id).bytes
         value = mod_registry[record]['displayName']
         name_lookup[key] = value # Used by [Load] List
         name_lookup[mod_id] = value # Used by [GUI] List
@@ -55,8 +58,11 @@ if(name_lookup):
 
     # Sort and Write Back the File
     if(enabled_mods):
-    	# Invalidate Existing Mod Hash
-    	os.remove('mod_hash')
+        # Invalidate Existing Mod Hash
+        try:
+            os.remove(mod_hash)
+        except:
+            print('No previously existing mod hash found.\n')
 
         # Sort the [Load] List by Name
         enabled_mods.sort(key=lambda tup: tup[0], reverse=True)
