@@ -275,7 +275,10 @@ class ModLoader:
         # Construct a Named List for Sorting
         names = []
         for mod_id in list_order:
-            names.append( ((this.mod_dict[mod_id]['displayName'], mod_id)) )
+            try:
+                names.append( ((this.mod_dict[mod_id]['displayName'], mod_id)) )
+            except:
+                print('Error: Append to global sort list ' + str(UUID(int=mod_id)))
         names.sort(key=lambda tup: tup[0], reverse=Rev)
         list_order.clear()
         for elem in names:
@@ -293,7 +296,7 @@ class ModLoader:
                 print('Error: (Write GUI Order) Ordered list of elements in non-unique')
         # Catch any elements leaked from original dictionary
         for int_id in dict_keys:
-            print('Error: (Write GUI Order) Leaked element: ' + int_id)
+            print('Error: (Write GUI Order) Leaked element: ' + str(int_id))
             uuid_str.append( str(this.mod_dict[int_id]['id']) )
         # Update UUID String
         this._gui_order['modsOrder'] = uuid_str
@@ -314,7 +317,7 @@ class ModLoader:
                 print('Error: (Write mod enabled order) Ordered list of elements in non-unique')
         for int_id in dict_keys:
             if(this.mod_dict[int_id]['enabled']):
-                print('Error: (Write mod enabled order) Leaked element: ' + int_id)
+                print('Error: (Write mod enabled order) Leaked element: ' + str(UUID(int=mod_id)))
                 mod_str.append(this.mod_dict[int_id]['gameRegistryId'])
         # Update Mod String
         this._enabled_list['enabled_mods'] = mod_str
